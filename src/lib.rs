@@ -8,6 +8,12 @@ mod analysis;
 mod parse;
 
 /// A source from a rule, parsed
+#[derive(Hash, PartialEq, PartialOrd, Eq, Ord, Clone, Debug)]
+struct StringSource {
+    name: String,
+    variables: Vec<String>,
+}
+
 struct Source {
     name: Ident,
     variables: Vec<Ident>,
@@ -71,4 +77,13 @@ fn rules_impl(rule: Rules) -> TokenStream2 {
         }
     }
     .into()
+}
+
+impl From<Source> for StringSource {
+    fn from(Source { name, variables }: Source) -> Self {
+        StringSource {
+            name: name.to_string(),
+            variables: variables.iter().map(|var| var.to_string()).collect(),
+        }
+    }
 }
